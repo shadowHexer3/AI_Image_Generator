@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Generator</title>
+
+    <link rel="stylesheet" href="imag.css">
+</head>
+
+<body>
+    
+    <nav class="navbar">
+
+    <div class="logo">
+        <span>✦</span> AI Image Generator
+    </div>
+
+    <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#styles">Styles</a>
+        <a href="#about">About</a>
+    </div>
+
+    <button id="themeToggle">🌙</button>
+
+</nav>
+
+    <div class="container" id="home">
+
+        <h1 class="hero-title">
+    <span>TURN YOUR IDEAS INTO</span>
+    <strong>Stunning AI Images</strong>
+</h1>
+
+        
+        <p>Create AI-generated images from text prompts.</p>
+
+<div class="style-pills" id="styles">
+    <span class="style-btn">✨ Creative</span>
+<span class="style-btn">🎮 Anime</span>
+<span class="style-btn">🖼️ Realistic</span>
+<span class="style-btn">◆ Cyberpunk</span>
+<span class="style-btn">✨ Fantasy</span>
+</div>
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="prompt"
+                placeholder="Describe your image...">
+            <select id="styleSelect">
+                <option value="">Default Style</option>
+                <option value="realistic">Realistic</option>
+                <option value="anime">Anime</option>
+                <option value="cyberpunk">Cyberpunk</option>
+                <option value="3d">3D</option>
+                <option value="fantasy">Fantasy</option>
+            </select>
+            <select id="imageCount">
+    <option value="1">1 Image</option>
+    <option value="2">2 Images</option>
+    <option value="3" selected>3 Images</option>
+    <option value="4">4 Images</option>
+</select>
+
+            <button id="generateBtn">
+                Generate
+            </button>
+
+        </div>
+
+        <div class="image-gallery" id="gallery">  </div>
+
+    </div>
+
+    
+    <div id="imageModal" class="modal">
+    <span id="closeModal">&times;</span>
+    <img id="modalImage">
+    
+</div>
+    <section id="about" class="about-section">
+        
+        <div class="about-background">
+
+    <div class="side-text left-text">
+        <span>Good</span>
+        <span>Ideas</span>
+        <span>Create</span>
+        <span>Amazing</span>
+        <span>Things</span>
+        <b>♡</b>
+    </div>
+
+    
+
+    
+
+    <div class="wave wave-one"></div>
+    <div class="wave wave-two"></div>
+
+    <div class="bottom-wave"></div>
+
+    <div class="ai-character">
+        <div class="character-glow"></div>
+       
+    </div>
+
+</div>
+        
+        <div class="about-hero">
+
+    <span class="about-label">✦ ABOUT OUR PROJECT ✦</span>
+
+    <h1>About AI Image Generator</h1>
+
+    <p>
+         AI Image Generator is a web application that transforms
+        text prompts into AI-generated images.
+    </p>
+            
+    <div class="hero-glow-line"></div>
+
+    <div class="hero-orbit-text">
+        • CREATE • EXPLORE • IMAGINE • TURN IDEAS INTO ART •
+    </div>
+
+
+</div>
+   
+    <div class="about-info">
+
+    <div>
+        <div class="feature-icon">🎨</div>
+
+        <h3>Multiple Styles</h3>
+
+        <p>
+            Choose from Creative, Anime, Realistic,
+            Cyberpunk and Fantasy styles.
+        </p>
+
+        <button onclick="document.getElementById('styles').scrollIntoView({ behavior: 'smooth' })">
+    Explore Styles →
+</button>
+    </div>
+
+
+    <div>
+        <div class="feature-icon">🖼️</div>
+
+        <h3>Image Generation</h3>
+
+        <p>
+            Generate one or more high-quality
+            AI images from your text prompt.
+        </p>
+
+        <button onclick="document.getElementById('home').scrollIntoView({ behavior: 'smooth' })">
+    Start Creating →
+</button>
+    </div>
+
+
+    <div>
+        <div class="feature-icon">☁️</div>
+
+        <h3>Download</h3>
+
+        <p>
+            Download your generated images
+            directly and use them for your projects.
+        </p>
+
+       <button onclick="document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' })">
+    Save Your Art →
+</button>
+    </div>
+
+</div>
+  
+
+    <div class="developer-card">
+
+    <div class="developer-info">
+
+        <div class="developer-icon">
+            🌱
+        </div>
+
+        <div>
+            <span>Developed by</span>
+
+            <h3>Fatim Al-Matar</h3>
+
+            <p>
+                A student passionate about technology,
+                creativity, and Artificial Intelligence.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="developer-quote">
+
+        <span class="quote-mark">❝</span>
+
+        <p>
+            Ideas don't just stay in your mind,
+            they can become something real.
+        </p>
+
+        <span class="quote-mark">❞</span>
+
+        <span class="quote-heart">♡</span>
+
+    </div>
+
+</div>
+
+</section>
+    
+    <footer class="site-footer">
+
+    <div class="footer-line"></div>
+
+    <p>
+        ✦ Created with creativity & AI ✦
+    </p>
+
+    <p class="copyright">
+        © 2026 AI Image Generator — Fatim Al-Matar
+    </p>
+
+</footer>
+    <button id="backToTop">↑</button>
+    <script src="imag.js"></script>
+</body>
+
+</html>

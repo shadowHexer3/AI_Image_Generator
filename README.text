@@ -1,0 +1,127 @@
+# AI Image Generator
+
+A simple AI image generation web application built with Node.js,
+Express, HTML, CSS, JavaScript, and AI Horde.
+
+## Features
+
+-   Generate AI images from text prompts
+-   Generate 1--4 images per request
+-   Creative, Anime, Realistic, Cyberpunk, and Fantasy styles
+-   Download generated images
+-   View generated images in a larger modal
+-   Generate Again
+-   Futuristic dark UI with glassmorphism and animated neon effects
+
+## Project Structure
+
+``` text
+Ai-imag/
+├── server.js
+├── imag.html
+├── imag.css
+├── imag.js
+├── home-bg.png
+├── ai-character.png
+└── README.md
+```
+
+## Requirements
+
+-   Node.js 18 or newer
+-   Internet connection
+-   Modern web browser
+
+## Installation
+
+Open PowerShell in the project folder:
+
+``` bash
+cd C:\Users\aliphotoshop\Desktop\Ai-imag
+```
+
+Install the required dependencies:
+
+``` bash
+npm install express cors
+```
+
+## Run
+
+Start the server:
+
+``` bash
+node server.js
+```
+
+Then open:
+
+``` text
+http://localhost:3000
+```
+
+## How It Works
+
+1.  Enter a text prompt.
+2.  Select the number of images.
+3.  Select a style if desired.
+4.  Click **Generate**.
+5.  The frontend sends the request to the Express `/generate` endpoint.
+6.  The server sends the request to AI Horde.
+7.  The server waits for generation to finish and returns the generated
+    image results.
+8.  The images are displayed in the gallery.
+
+## AI Service
+
+The project currently uses **AI Horde** with a Stable Diffusion model.
+Generation time can vary depending on the available worker queue.
+
+## Troubleshooting
+
+### Node.js is not recognized
+
+Check the installation:
+
+``` bash
+node -v
+```
+
+Install Node.js if the command is not available.
+
+### Dependencies are missing
+
+Run:
+
+``` bash
+npm install express cors
+```
+
+### The page does not open
+
+Make sure the server is running:
+
+``` bash
+node server.js
+```
+
+Then visit:
+
+``` text
+http://localhost:3000
+```
+
+### Generation is slow
+
+AI Horde is a community-based service, so generation time depends on the
+current queue and available workers.
+
+## Security
+
+Do not commit private API keys, passwords, or other secrets to GitHub.
+
+## Developer
+
+**Fatim al-matar**
+
+Educational AI Image Generator Project
