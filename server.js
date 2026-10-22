@@ -1,8 +1,34 @@
+
 const express = require("express");
 const cors = require("cors");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+async function fetchWithRetry(url, options = {}, attempts = 3) {
+    for (let attempt = 1; ; attempt++) {
+        try {
+            return await fetch(url, options);
+        } catch (error) {
+            const code = error.cause?.code || error.code;
+            const retryable = [
+                "EAI_AGAIN",
+                "ENOTFOUND",
+                "ECONNRESET",
+                "ETIMEDOUT"
+            ].includes(code);
+
+            if (!retryable || attempt >= attempts) {
+                throw error;
+            }
+
+            console.log(`Temporary network error: ${code}`);
+            await new Promise(resolve =>
+                setTimeout(resolve, attempt * 1500)
+            );
+        }
+    }
+}
 
 app.use(cors());
 app.use(express.json());
@@ -24,8 +50,7 @@ app.post("/generate", async (req, res) => {
 
         const imageCount = Math.min(Number(count) || 1, 4);
 
-        // Send request to AI Horde
-        const response = await fetch(
+        const response = await fetchWithRetry(
             "https://aihorde.net/api/v2/generate/async",
             {
                 method: "POST",
@@ -35,7 +60,7 @@ app.post("/generate", async (req, res) => {
                     "Client-Agent": "AI-Image-Generator:1.0"
                 },
                 body: JSON.stringify({
-                    prompt: prompt,
+                    prompt,
                     models: ["stable_diffusion"],
                     params: {
                         width: 512,
@@ -48,28 +73,22 @@ app.post("/generate", async (req, res) => {
         );
 
         const data = await response.json();
-        
 
         if (!response.ok) {
-            console.log(data);
-
             return res.status(response.status).json({
                 error: data.message || "AI Horde request failed"
             });
         }
 
         const requestId = data.id;
-
-        console.log("AI Horde request:", requestId);
-
-        // Wait until generation is finished
         let finished = false;
-        let statusData;
 
         for (let i = 0; i < 120; i++) {
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve =>
+                setTimeout(resolve, 2000)
+            );
 
-            const checkResponse = await fetch(
+            const checkResponse = await fetchWithRetry(
                 `https://aihorde.net/api/v2/generate/check/${requestId}`,
                 {
                     headers: {
@@ -79,8 +98,6 @@ app.post("/generate", async (req, res) => {
             );
 
             const checkData = await checkResponse.json();
-
-            console.log("Waiting:", checkData);
 
             if (checkData.done) {
                 finished = true;
@@ -94,8 +111,7 @@ app.post("/generate", async (req, res) => {
             });
         }
 
-        // Get the generated images
-        const statusResponse = await fetch(
+        const statusResponse = await fetchWithRetry(
             `https://aihorde.net/api/v2/generate/status/${requestId}`,
             {
                 headers: {
@@ -104,46 +120,36 @@ app.post("/generate", async (req, res) => {
             }
         );
 
-        statusData = await statusResponse.json();
-        console.log("STATUS DATA:", JSON.stringify(statusData, null, 2));
+        const statusData = await statusResponse.json();
+        const images = [];
 
-const images = [];
+        for (const generation of statusData.generations || []) {
+            if (!generation.img) continue;
 
-for (const generation of statusData.generations || []) {
+            const imageResponse = await fetchWithRetry(
+                generation.img
+            );
 
-    if (!generation.img) continue;
+            if (!imageResponse.ok) continue;
 
-    console.log("IMAGE FOUND:", generation.img);
+            const imageBuffer = await imageResponse.arrayBuffer();
+            const base64 = Buffer.from(imageBuffer).toString("base64");
+            const contentType =
+                imageResponse.headers.get("content-type") || "image/png";
 
-    const imageResponse = await fetch(generation.img);
+            images.push(`data:${contentType};base64,${base64}`);
+        }
 
-    if (!imageResponse.ok) {
-        console.log("IMAGE DOWNLOAD FAILED:", imageResponse.status);
-        continue;
-    }
+        if (images.length === 0) {
+            return res.status(500).json({
+                error: "No images were generated."
+            });
+        }
 
-    const imageBuffer = await imageResponse.arrayBuffer();
-
-    const base64 = Buffer.from(imageBuffer).toString("base64");
-
-    const contentType =
-        imageResponse.headers.get("content-type") || "image/png";
-
-    images.push(`data:${contentType};base64,${base64}`);
-}
-
-if (images.length === 0) {
-    return res.status(500).json({
-        error: "No images were generated."
-    });
-}
-
-res.json({
-    images: images
-});
+        res.json({ images });
 
     } catch (error) {
-        console.error(error);
+        console.error("Generation error:", error);
 
         res.status(500).json({
             error: "Image generation failed"
@@ -151,6 +157,6 @@ res.json({
     }
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on port ${PORT}`);
 });
